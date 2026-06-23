@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora - MRU</title>
+
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+
+    <style>
+        body {
+            background-color: #2e3250;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 50px;
+            font-weight: normal;
+            margin: 40px 0 30px 0;
+        }
+
+        .meio {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .caixa {
+            border: 2px solid #d6d6d6;
+            border-radius: 8px;
+            padding: 40px;
+            width: 500px;
+        }
+
+        .campo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .campo label {
+            width: 160px;
+            font-size: 18px;
+        }
+
+        .campo input {
+            flex: 1;
+            height: 30px;
+            background-color: #d6d6d6;
+            border: none;
+            border-radius: 4px;
+            padding: 0 8px;
+            font-size: 16px;
+            color: #2e3250;
+        }
+
+        .botoes {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .botoes button {
+            flex: 1;
+            height: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-calcular:hover, .btn-limpar:hover {
+            background-color: #000529;
+            color: white;
+        }
+
+        .btn-limpar, .btn-calcular {
+            background-color: #d6d6d6;
+            color: #2e3250;
+            transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+        }
+
+        #grafico {
+            width: 100%;
+            min-width: 580px;
+            max-width: 700px;
+            height: 400px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Calculadora - MRU</h1>
+
+    <main class="meio">
+        <div class="caixa">
+            <div class="campo">
+                <label>Posição Inicial:</label>
+                <input type="number" id="posInicial" placeholder="m">
+            </div>
+
+            <div class="campo">
+                <label>Velocidade:</label>
+                <input type="number" id="velocidade" placeholder="m/s">
+            </div>
+
+            <div class="campo">
+                <label>Tempo:</label>
+                <input type="number" id="tempo" placeholder="s">
+            </div>
+
+            <div class="botoes">
+                <button class="btn-calcular" onclick="calcular()">Calcular</button>
+                <button class="btn-limpar" onclick="limpar()">Limpar</button>
+            </div>
+        </div>
+
+        <div id="grafico"></div>
+    </main>
+
+<script>
+function calcular() {
+    const posInicial = Number(document.getElementById("posInicial").value);
+    const velocidad = Number(document.getElementById("velocidade").value);
+    const tempo = Number(document.getElementById("tempo").value);
+
+    const tValores = [];
+    const sValores = [];
+
+    for (let t = 0; t <= tempo; t++) {
+        
+        let s = posInicial + velocidad * t;
+
+        tValores.push(t); 
+        sValores.push(s); 
+    }
+
+    const dados = [{
+        x: tValores,
+        y: sValores,
+        mode: "lines+markers", 
+        type: "scatter",
+        line: { color: '#d6d6d6' },
+        marker: { color: '#000000' },
+        line: { color: '#000000' }
+    }];
+
+    const layout = {
+        title: `Gráfico MRU (S = ${posInicial} + ${velocidad} * t)`,
+        paper_bgcolor: '#2e3250',
+        plot_bgcolor: '#ffffff',
+        font: { color: 'ffffff' },
+        xaxis: { title: 'Tempo (s)' },
+        yaxis: { title: 'Posição (m)' }
+    };
+
+    document.getElementById("grafico").style.display = "block";
+    Plotly.newPlot("grafico", dados, layout);
+}
+    
+function limpar() {
+    document.getElementById("tempo").value = "";
+    document.getElementById("posInicial").value = "";
+    document.getElementById("velocidade").value = "";
+    document.getElementById("grafico").style.display = "none";
+}
+</script>
+
+</body>
+</html>
